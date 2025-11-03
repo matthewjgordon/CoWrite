@@ -1,5 +1,8 @@
 # CoWrite
 
+> **Note:** The file `User-Info.md` contains personal data and is excluded from version control.  
+> See [Privacy & Data Use](#privacy--data-use) for details on how it’s handled.
+
 ## Overview
 
 This system helps job seekers and professionals generate high-quality, job-tailored resumes and cover letters in collaboration with any large language model (LLM) capable of structured reasoning and multi-step task execution — such as ChatGPT, Claude, Gemini, or a locally hosted model.
@@ -57,6 +60,13 @@ For a detailed explanation of each module and workflow stage, visit the [System 
 The system doesn’t store, share, or transmit any of your data. Everything stays within the active chat session.
 
 That said, **your LLM provider likely handles data differently.** Depending on your platform (ChatGPT, Claude, Gemini, or others), your session may be logged or reviewed per their privacy policy. You are responsible for what you share.
+
+### Local Data (User-Info.md)
+CoWrite also includes a local file, `User-Info.md`, used to personalize your experience and provide context during sessions.  
+This file lives entirely on your device — it is never uploaded, transmitted, or synced.  
+
+For your protection, `User-Info.md` is excluded from version control (`.gitignore`), ensuring personal information cannot be committed or shared if you use Git or GitHub.  
+A template and example version are provided so you can safely create and maintain your local copy.
 
 ---
 
