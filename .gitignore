@@ -1,0 +1,24 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.DocumentRevisions-V100
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# IDE/editor metadata
+.vscode/
+.idea/
+
+# Local-only content
+Wiki/
+<!-- User-Info.md -->
+
+# Logs and temporary files
+*.log
