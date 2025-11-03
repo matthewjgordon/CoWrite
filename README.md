@@ -15,6 +15,18 @@ The system provides structure and clarity while keeping the process collaborativ
 
 ---
 
+## Quick Start
+
+If you’re new to GitHub, you can skip cloning and simply download the latest starter files.
+
+**[Download CoWrite Starter Pack](https://github.com/matthewjgordon/CoWrite/releases/latest)**  
+This includes:
+- `System-Instructions.md`
+- `User-Info.md` (blank template)
+- `Quickstart.md` (simple setup guide)
+
+---
+
 ## Installation
 
 You can access CoWrite in two ways.

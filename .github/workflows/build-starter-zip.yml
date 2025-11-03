@@ -1,0 +1,59 @@
+name: Build and attach CoWrite-Starter.zip
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  package-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify required files
+        run: |
+          set -e
+          for f in "System-Instructions.md" "User-Info.md" "Quickstart.md"; do
+            if [ ! -f "$f" ]; then
+              echo "Missing required file: $f" >&2
+              exit 1
+            fi
+          done
+
+      - name: Create starter folder and zip
+        run: |
+          set -e
+          mkdir -p CoWrite-Starter
+          cp System-Instructions.md CoWrite-Starter/
+          cp User-Info.md           CoWrite-Starter/
+          cp Quickstart.md          CoWrite-Starter/
+          zip -r CoWrite-Starter.zip CoWrite-Starter
+
+      - name: Upload asset to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: CoWrite-Starter.zip
+
+      # Optional: commit zip to a dist/ folder on default branch.
+      # Enable only if you truly want the zip in the repo.
+      # - name: Commit zip to dist/
+      #   if: github.event_name != 'release' || always()
+      #   run: |
+      #     set -e
+      #     mkdir -p dist
+      #     mv CoWrite-Starter.zip dist/
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     if ! git diff --quiet; then
+      #       git add dist/CoWrite-Starter.zip
+      #       git commit -m "chore: update CoWrite-Starter.zip"
+      #       git push
+      #     fi
