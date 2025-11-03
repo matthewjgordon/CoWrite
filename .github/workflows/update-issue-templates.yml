@@ -1,0 +1,96 @@
+name: Update issue templates with latest version
+
+on:
+  # A GitHub Release (UI) — creates/uses a tag
+  release:
+    types: [published]
+
+  # A tag is pushed directly (local or UI)
+  push:
+    tags:
+      - 'v*'          # adjust pattern if you use a different tag prefix
+    paths:
+      - 'VERSION'     # if you bump a VERSION file instead of tags
+
+  # Allow manual run
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  bump-template-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version tag
+        id: ver
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # 1) Release event
+          if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
+            echo "value=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # 2) Tag push (ref is tags/<name>)
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # 3) VERSION file updated on main (or any branch in your filters)
+          if [[ -f VERSION ]]; then
+            V="$(tr -d '\n\r' < VERSION)"
+            if [[ -n "$V" ]]; then
+              echo "value=$V" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
+          # 4) Fallback to latest tag if present
+          if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+            echo "value=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
+          else
+            echo "No tag or VERSION found; nothing to update."
+            echo "value=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update CoWrite Version in templates
+        if: steps.ver.outputs.value != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          TEMPLATES_DIR=".github/ISSUE_TEMPLATE"
+          VER="${{ steps.ver.outputs.value }}"
+
+          [[ -d "$TEMPLATES_DIR" ]] || exit 0
+          shopt -s nullglob
+          changed=0
+          for f in "$TEMPLATES_DIR"/*.md; do
+            if grep -qE '^- \*\*CoWrite Version:\*\* ' "$f"; then
+              sed -E -i "s|^- \\*\\*CoWrite Version:\\*\\* .*|- **CoWrite Version:** ${VER}|" "$f" && changed=1
+            fi
+          done
+
+          if [[ "$changed" -eq 0 ]]; then
+            echo "No template lines matched; nothing to change."
+            exit 0
+          fi
+
+      - name: Commit and push (if changed)
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add .github/ISSUE_TEMPLATE/*.md
+            git commit -m "chore: update issue templates to ${{ steps.ver.outputs.value }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi
