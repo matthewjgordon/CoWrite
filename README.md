@@ -1,3 +1,8 @@
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![GitHub release](https://img.shields.io/github/v/release/<your-username>/CoWrite)](https://github.com/<your-username>/CoWrite/releases)
+[![Contributions welcome](https://img.shields.io/badge/Contributions-welcome-lightgrey.svg)](https://github.com/<your-username>/CoWrite/issues)
+![Made with Markdown](https://img.shields.io/badge/Made%20with-Markdown-lightgrey.svg)
+
 # CoWrite
 
 > **Note:** The file `User-Info.md` contains personal data and is excluded from version control.  
